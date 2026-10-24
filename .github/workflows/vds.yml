@@ -1,7 +1,7 @@
 name: Free Ubuntu VDS (tmate)
 
 on:
-  workflow_dispatch: # Manuel başlatma butonu sağlar
+  workflow_dispatch:
 
 jobs:
   build:
@@ -11,7 +11,16 @@ jobs:
     - name: Depoyu Klonla
       uses: actions/checkout@v4
 
-    - name: SSH / tmate Oturumu Başlat
-      uses: mxschmitt/action-tmate@v3
-      with:
-        limit-access-to-actor: false # Herkesin verilen SSH linki ile bağlanabilmesini sağlar
+    - name: Tmate Kur ve SSH Linki Uret
+      run: |
+        sudo apt-get update && sudo apt-get install -y tmate
+        tmate -S /tmp/tmate.sock new-session -d
+        tmate -S /tmp/tmate.sock wait tmate-ready
+        echo "=================================================="
+        echo "SSH BAGLANTI KOMUTU:"
+        tmate -S /tmp/tmate.sock display -p '#{tmate_ssh}'
+        echo "WEB TERMINAL BAGLANTISI:"
+        tmate -S /tmp/tmate.sock display -p '#{tmate_web}'
+        echo "=================================================="
+        # Sunucunun kapanmaması için sonsuz döngü
+        while true; do sleep 60; done
