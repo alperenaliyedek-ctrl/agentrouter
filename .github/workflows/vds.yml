@@ -1,0 +1,17 @@
+name: Free Ubuntu VDS (tmate)
+
+on:
+  workflow_dispatch: # Manuel başlatma butonu sağlar
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Depoyu Klonla
+      uses: actions/checkout@v4
+
+    - name: SSH / tmate Oturumu Başlat
+      uses: mxschmitt/action-tmate@v3
+      with:
+        limit-access-to-actor: false # Herkesin verilen SSH linki ile bağlanabilmesini sağlar
